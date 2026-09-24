@@ -12,7 +12,7 @@ description: Plain-English lessons, real situations and free templates for anyon
 # If your repository has another name (e.g. "product-starter"),
 # set baseurl to "/product-starter".
 url: ""
-baseurl: ""
+baseurl: "/product_starter"
 
 # Newsletter: paste your Substack / MailerLite sign-up link here
 # (e.g. https://productstarter.substack.com/subscribe).
