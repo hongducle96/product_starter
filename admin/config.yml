@@ -3,11 +3,11 @@
 
 backend:
   name: github
-  repo: YOUR-USERNAME/YOUR-USERNAME.github.io
+  repo: hongducle96/product_starter
   branch: main
 
 media_folder: images
-public_folder: /images
+public_folder: /product_starter/images
 
 collections:
   - name: days
