@@ -1,0 +1,6 @@
+{% assign c = include.case %}{% assign soon = false %}{% if c.status == "coming-soon" %}{% assign soon = true %}{% endif %}<article class="card {% if soon %}soon{% else %}clickable{% endif %}">
+  <div class="meta">{% include icon.html name="case" %}<span>Case study</span>{% if c.tag %}<span class="badge">{{ c.tag }}</span>{% endif %}{% if soon %}<span class="badge badge-outline">Coming soon</span>{% endif %}</div>
+  <h3 class="card-title">{% if soon %}{{ c.title }}{% else %}<a href="{{ c.url | relative_url }}">{{ c.title }}</a>{% endif %}</h3>
+  <p class="card-body">{{ c.summary }}</p>
+  <div class="meta">{{ c.minutes | default: 6 }} min read</div>
+</article>

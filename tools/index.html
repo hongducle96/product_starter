@@ -1,0 +1,15 @@
+---
+layout: default
+title: Tools & templates
+summary: Free templates for the everyday work of Product.
+nav: tools
+---
+{% assign ts = site.templates | sort: "order" %}
+<div class="wrap">
+  <section class="page-head">
+    <span class="eyebrow">Tools &amp; templates</span>
+    <h1>Start with a good page, not a blank one.</h1>
+    <p class="lead">Free templates for the everyday work of Product. Preview any of them, copy the text and paste it into your own doc or sheet.</p>
+  </section>
+  <div class="grid">{% for t in ts %}{% include template-card.html template=t %}{% endfor %}</div>
+</div>

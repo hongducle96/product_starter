@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% if page.title and page.url != "/" %}{{ page.title }} · {% endif %}{{ site.title }}</title>
+<meta name="description" content="{{ page.summary | default: site.description | strip_html | escape }}">
+<meta property="og:title" content="{{ page.title | default: site.title | escape }}">
+<meta property="og:description" content="{{ page.summary | default: site.description | strip_html | escape }}">
+<link rel="icon" href="{{ '/images/favicon.svg' | relative_url }}" type="image/svg+xml">
+<script>try{var t=JSON.parse(localStorage.getItem('ps.theme'));if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600&family=Lexend:wght@300;400;500&display=swap">
+<link rel="stylesheet" href="{{ '/assets/css/site.css' | relative_url }}">
+</head>
+<body>
+{% include icons.html %}
+<header class="nav" id="nav">
+  <div class="wrap nav-in">
+    <a class="brand" href="{{ '/' | relative_url }}" aria-label="{{ site.title }} home">{% include mark.html %}{{ site.title }}</a>
+    <button class="iconbtn menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="navLinks" aria-label="Open menu">
+      <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>
+    </button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="{{ '/' | relative_url }}"{% if page.nav == 'home' %} aria-current="page"{% endif %}>Home</a></li>
+      <li><a href="{{ '/days/' | relative_url }}"{% if page.nav == 'days' %} aria-current="page"{% endif %}>100 Days</a></li>
+      <li><a href="{{ '/stories/' | relative_url }}"{% if page.nav == 'stories' %} aria-current="page"{% endif %}>Stories</a></li>
+      <li><a href="{{ '/cases/' | relative_url }}"{% if page.nav == 'cases' %} aria-current="page"{% endif %}>Case studies</a></li>
+      <li><a href="{{ '/tools/' | relative_url }}"{% if page.nav == 'tools' %} aria-current="page"{% endif %}>Tools &amp; templates</a></li>
+      <li><a href="{{ '/play/pm-quiz/' | relative_url }}">Play</a></li>
+      <li><a href="{{ '/about/' | relative_url }}"{% if page.nav == 'about' %} aria-current="page"{% endif %}>About</a></li>
+    </ul>
+    <button class="iconbtn" id="themeBtn" type="button" aria-label="Switch colour theme"></button>
+  </div>
+</header>
+
+<main>
+{{ content }}
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-in">
+    <div class="footer-top">
+      <div>
+        <a class="brand" href="{{ '/' | relative_url }}">{% include mark.html inverse=true %}{{ site.title }}</a>
+        <p>{{ site.tagline }} Learn it, practice it, grow a career in it.</p>
+      </div>
+      <div class="footer-cols">
+        <div><h4>Learn</h4><ul><li><a href="{{ '/days/' | relative_url }}">100 Days of Product</a></li><li><a href="{{ '/stories/' | relative_url }}">Stories</a></li><li><a href="{{ '/cases/' | relative_url }}">Case studies</a></li></ul></div>
+        <div><h4>Use</h4><ul><li><a href="{{ '/tools/' | relative_url }}">Tools &amp; templates</a></li><li><a href="{{ '/play/pm-quiz/' | relative_url }}">Play</a></li></ul></div>
+        <div><h4>{{ site.title }}</h4><ul><li><a href="{{ '/about/' | relative_url }}">About</a></li>{% if site.newsletter_url != "" %}<li><a href="{{ site.newsletter_url }}">Newsletter</a></li>{% endif %}</ul></div>
+      </div>
+    </div>
+    <div class="footer-bottom">© {{ site.time | date: "%Y" }} {{ site.title }}. Made to help people into Product.</div>
+  </div>
+</footer>
+
+<div id="modalRoot"></div>
+
+{% assign all_days = site.days | sort: "day" %}
+<script>
+window.PS = {
+  newsletterUrl: {{ site.newsletter_url | jsonify }},
+  daysUrl: {{ '/days/' | relative_url | jsonify }},
+  lessons: [{% for d in all_days %}{"day": {{ d.day | default: 0 }}, "title": {{ d.title | jsonify }}, "url": {{ d.url | relative_url | jsonify }}, "minutes": {{ d.minutes | default: 5 }}}{% unless forloop.last %},{% endunless %}{% endfor %}]
+};
+</script>
+<script src="{{ '/assets/js/site.js' | relative_url }}"></script>
+</body>
+</html>

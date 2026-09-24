@@ -1,0 +1,7 @@
+{% assign t = include.template %}{% assign tid = t.title | slugify %}<article class="card">
+  {% include icon.html name=t.icon class="ic-lg" %}
+  <h3 class="card-title">{{ t.title }}</h3>
+  <p class="card-body">{{ t.desc }}</p>
+  <div class="card-foot"><span class="meta">{{ t.format }} template</span><button class="btn btn-secondary btn-sm" type="button" data-template="{{ tid }}">{% include icon.html name="template" %}Preview</button></div>
+  <template id="tpl-{{ tid }}" data-title="{{ t.title | escape }}" data-format="{{ t.format | escape }}" data-desc="{{ t.desc | escape }}">{{ t.text | escape }}</template>
+</article>

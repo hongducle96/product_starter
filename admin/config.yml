@@ -1,0 +1,66 @@
+# Writing screen settings (Sveltia CMS).
+# ONE thing to change: replace YOUR-USERNAME below with your GitHub username.
+
+backend:
+  name: github
+  repo: YOUR-USERNAME/YOUR-USERNAME.github.io
+  branch: main
+
+media_folder: images
+public_folder: /images
+
+collections:
+  - name: days
+    label: 100 Days lessons
+    label_singular: Lesson
+    folder: _days
+    create: true
+    slug: "day-{{fields.day}}"
+    summary: "Day {{day}}: {{title}}"
+    sortable_fields: [day, title]
+    fields:
+      - { label: Day number, name: day, widget: number, value_type: int, min: 1, max: 100 }
+      - { label: Title, name: title, widget: string }
+      - { label: Module, name: topic, widget: select, options: [Basics, Discovery, Delivery, Metrics, Career] }
+      - { label: Minutes to read, name: minutes, widget: number, value_type: int, default: 5 }
+      - { label: One-line summary, name: summary, widget: text }
+      - { label: Lesson, name: body, widget: markdown, required: false, hint: "Leave empty to show 'This lesson is being written'." }
+
+  - name: cases
+    label: Case studies
+    label_singular: Case study
+    folder: _cases
+    create: true
+    fields:
+      - { label: Title, name: title, widget: string }
+      - { label: Tag, name: tag, widget: string, hint: "One word, e.g. Discovery, MVP, Metrics" }
+      - { label: Minutes to read, name: minutes, widget: number, value_type: int, default: 6 }
+      - { label: Order on the page, name: order, widget: number, value_type: int, default: 10 }
+      - { label: One-line summary, name: summary, widget: text }
+      - { label: Status, name: status, widget: select, options: [published, coming-soon], default: published }
+      - { label: Case study, name: body, widget: markdown, required: false }
+
+  - name: stories
+    label: Stories
+    label_singular: Story
+    folder: _stories
+    create: true
+    fields:
+      - { label: Title, name: title, widget: string }
+      - { label: Role change, name: role, widget: string, hint: "e.g. Teacher → Product" }
+      - { label: One-line summary, name: summary, widget: text }
+      - { label: Order on the page, name: order, widget: number, value_type: int, default: 10 }
+      - { label: Sample (placeholder), name: sample, widget: boolean, default: false }
+
+  - name: templates
+    label: Tools & templates
+    label_singular: Template
+    folder: _templates
+    create: true
+    fields:
+      - { label: Title, name: title, widget: string }
+      - { label: Short description, name: desc, widget: string }
+      - { label: Format, name: format, widget: select, options: [Doc, Sheet] }
+      - { label: Icon, name: icon, widget: select, options: [template, book, calendar, story, case, path, user, tip, search, mail] }
+      - { label: Order on the page, name: order, widget: number, value_type: int, default: 10 }
+      - { label: Template text, name: text, widget: text }

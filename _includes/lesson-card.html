@@ -1,0 +1,6 @@
+{% assign l = include.lesson %}<article class="card clickable" data-day="{{ l.day }}">
+  <div class="card-top"><span class="day-num">{{ l.day }}<small>/ 100</small></span><span data-status></span></div>
+  <h3 class="card-title"><a href="{{ l.url | relative_url }}">{{ l.title }}</a></h3>
+  {% if l.summary %}<p class="card-body">{{ l.summary }}</p>{% endif %}
+  <div class="meta"><span class="badge">{{ l.topic }}</span><span>{{ l.minutes | default: 5 }} min read</span></div>
+</article>

@@ -1,0 +1,22 @@
+# The five modules of 100 Days of Product.
+# A lesson belongs to a module through its "topic" field.
+- name: Basics
+  from: 1
+  to: 20
+  blurb: What Product is, who does what, and why it matters.
+- name: Discovery
+  from: 21
+  to: 40
+  blurb: Finding the right problem before building anything.
+- name: Delivery
+  from: 41
+  to: 60
+  blurb: Turning a good problem into something people can use.
+- name: Metrics
+  from: 61
+  to: 80
+  blurb: Knowing whether what you built actually helped.
+- name: Career
+  from: 81
+  to: 100
+  blurb: Getting your first Product role and growing in it.

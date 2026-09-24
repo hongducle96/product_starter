@@ -1,0 +1,26 @@
+---
+layout: default
+title: Stories
+summary: How people found their way into Product.
+nav: stories
+---
+{% assign stories = site.stories | sort: "order" %}
+<div class="wrap">
+  <section class="page-head">
+    <span class="eyebrow">Stories</span>
+    <h1>How people found their way into Product.</h1>
+    <p class="lead">Short, honest stories about switching careers, first jobs and early mistakes. Everyone started somewhere.</p>
+  </section>
+  <div class="grid">
+    {% for s in stories %}
+    <article class="card">
+      <div class="card-media">{% assign odd = forloop.index | modulo: 2 %}{% if odd == 1 %}{% include art-empty.html %}{% else %}{% include art-newsletter.html %}{% endif %}</div>
+      <div class="meta">{% include icon.html name="story" %}<span>Story · {{ s.role }}</span>{% if s.sample %}<span class="badge badge-outline">Sample</span>{% endif %}</div>
+      <h3 class="card-title">{{ s.title }}</h3>
+      <p class="card-body">{{ s.summary }}</p>
+    </article>
+    {% endfor %}
+  </div>
+  <p class="note" style="margin-top:var(--space-4)">Stories marked "Sample" are placeholders. Real stories from readers will replace them.</p>
+</div>
+<div class="wrap" style="margin-top:var(--space-16)">{% include newsletter.html %}</div>

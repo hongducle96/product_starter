@@ -1,0 +1,28 @@
+---
+layout: default
+---
+{% assign stripped = content | strip_html | strip %}
+{% assign ds = site.days | sort: "day" %}
+{% assign i = 0 %}{% for d in ds %}{% if d.url == page.url %}{% assign i = forloop.index0 %}{% endif %}{% endfor %}
+{% assign pi = i | minus: 1 %}{% assign ni = i | plus: 1 %}
+<div class="wrap"><article class="article">
+  <div class="crumbs"><a href="{{ '/days/' | relative_url }}">100 Days</a><span>/</span><span>{{ page.topic }}</span></div>
+  <div class="meta"><span class="day-num">{{ page.day }}<small>/ 100</small></span><span class="badge">{{ page.topic }}</span><span>{{ page.minutes | default: 5 }} min read</span></div>
+  <h1>{{ page.title }}</h1>
+  {% if stripped == "" %}
+  <p class="lead" style="max-width:none">{{ page.summary }}</p>
+  <div class="empty">
+    <div class="art">{% include art-empty.html %}</div>
+    <h3>This lesson is being written</h3>
+    <p>The outline is ready and the full lesson is on its way.</p>
+    <a class="btn btn-secondary" href="{{ '/#newsletter' | relative_url }}">Get new lessons by email</a>
+  </div>
+  {% else %}
+  <div class="prose">{{ content }}</div>
+  {% endif %}
+  <div class="done-bar" data-done-bar data-day="{{ page.day }}"></div>
+  <nav class="pager" aria-label="Lesson navigation">
+    {% if i > 0 %}{% assign prev = ds[pi] %}<a class="link" href="{{ prev.url | relative_url }}">← Day {{ prev.day }}: {{ prev.title }}</a>{% else %}<span></span>{% endif %}
+    {% assign next = ds[ni] %}{% if next %}<a class="link" href="{{ next.url | relative_url }}">Day {{ next.day }}: {{ next.title }} →</a>{% endif %}
+  </nav>
+</article></div>

@@ -1,0 +1,47 @@
+# ------------------------------------------------------------
+#  Product Starter: site settings
+#  Most of the time you never need to touch this file.
+# ------------------------------------------------------------
+
+title: Product Starter
+tagline: Your first step into Product.
+description: Plain-English lessons, real situations and free templates for anyone starting a career in Product.
+
+# Leave both empty if your repository is named <username>.github.io
+# or once you connect your own domain.
+# If your repository has another name (e.g. "product-starter"),
+# set baseurl to "/product-starter".
+url: ""
+baseurl: ""
+
+# Newsletter: paste your Substack / MailerLite sign-up link here
+# (e.g. https://productstarter.substack.com/subscribe).
+# While it is empty, the sign-up form shows a "not connected yet" note.
+newsletter_url: ""
+
+markdown: kramdown
+kramdown:
+  input: GFM
+  hard_wrap: false
+
+collections:
+  days:
+    output: true
+    permalink: /days/:name/
+  cases:
+    output: true
+    permalink: /cases/:name/
+  stories:
+    output: false
+  templates:
+    output: false
+
+defaults:
+  - scope: { path: "", type: days }
+    values: { layout: lesson, nav: days }
+  - scope: { path: "", type: cases }
+    values: { layout: case, nav: cases }
+
+exclude:
+  - README.md
+  - HUONG-DAN.md

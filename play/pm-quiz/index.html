@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Problem or solution? · Product Starter</title>
+<meta name="description" content="A 2-minute game: can you tell a user problem from a solution in disguise?">
+<link rel="icon" href="../../images/favicon.svg" type="image/svg+xml">
+<script>try{var t=JSON.parse(localStorage.getItem('ps.theme'));if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600&family=Lexend:wght@300;400;500&display=swap">
+<link rel="stylesheet" href="../../assets/css/site.css">
+<style>
+  .game { max-width:640px; margin:0 auto; padding-block:var(--space-12) var(--space-16); display:grid; gap:var(--space-6); }
+  .topbar { display:flex; justify-content:space-between; align-items:center; gap:var(--space-4); padding-block:var(--space-4); border-bottom:1px solid var(--line); }
+  .statement { font-family:var(--font-display); font-size:clamp(22px,3.4vw,28px); line-height:1.3; font-weight:500; color:var(--ink); text-wrap:balance; }
+  .choices { display:grid; grid-template-columns:1fr 1fr; gap:var(--space-3); }
+  .choice { font-family:var(--font-sans); font-size:16px; font-weight:500; min-height:56px; border-radius:var(--radius-md); border:1.5px solid var(--line-strong); background:var(--surface-raised); color:var(--ink); cursor:pointer; }
+  .choice:hover:not([disabled]) { border-color:var(--ink); }
+  .choice[disabled] { cursor:default; opacity:.55; }
+  .choice.picked { opacity:1; border-width:2px; border-color:var(--ink); }
+  .feedback { border-radius:var(--radius-md); padding:var(--space-4) var(--space-6); display:grid; gap:var(--space-2); }
+  .feedback.right { background:var(--success-soft); }
+  .feedback.wrong { background:var(--danger-soft); }
+  .feedback b { font-family:var(--font-display); font-weight:500; }
+  .feedback.right b { color:var(--success); }
+  .feedback.wrong b { color:var(--danger); }
+  .feedback p { color:var(--ink); }
+  .score { font-family:var(--font-display); font-size:64px; line-height:1; font-weight:600; letter-spacing:-.02em; font-variant-numeric:tabular-nums; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <a class="brand" href="../../">Product Starter</a>
+    <span class="meta" id="count" aria-live="polite"></span>
+  </div>
+  <main class="game" id="game"></main>
+</div>
+<script>
+(function () {
+  var Q = [
+    { s: '"Shoppers can\'t find sale items in their size."', a: 'problem', why: 'It describes what people struggle with, without naming a feature.' },
+    { s: '"We need a sale filter on the search page."', a: 'solution', why: 'A filter is one possible answer. The problem behind it is still unknown.' },
+    { s: '"New users give up before finishing sign-up."', a: 'problem', why: 'It tells you what goes wrong and for whom. Now you can ask why.' },
+    { s: '"Let\'s add a chatbot to help customers."', a: 'solution', why: 'A chatbot is a tool. What do customers need help with, exactly?' },
+    { s: '"Parents forget to pay school fees on time."', a: 'problem', why: 'A real behaviour of a real group. Many solutions could help.' },
+    { s: '"The app should send more push notifications."', a: 'solution', why: 'More notifications is a guess. What are you trying to change?' },
+    { s: '"Drivers waste time looking for parking near the office."', a: 'problem', why: 'Clear user, clear pain, no feature named.' },
+    { s: '"We should redesign the home page."', a: 'solution', why: 'A redesign is an answer. The question is what is not working today.' }
+  ];
+  var i = 0, score = 0, game = document.getElementById('game'), count = document.getElementById('count');
+  function esc(x) { return String(x).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function intro() {
+    count.textContent = '';
+    game.innerHTML = '<span class="eyebrow">Play · 2 minutes</span><h1>Problem or <mark>solution</mark>?</h1>' +
+      '<p class="lead">Good PMs start from the problem. Teams often bring a solution dressed up as one. Read each sentence and decide which it is.</p>' +
+      '<div class="actions"><button class="btn btn-primary" type="button" id="start">Start the game</button><a class="btn btn-ghost" href="../../cases/discount-hunting/">Read the case study first</a></div>';
+    document.getElementById('start').onclick = function () { i = 0; score = 0; ask(); };
+  }
+  function ask() {
+    var q = Q[i];
+    count.textContent = 'Question ' + (i + 1) + ' of ' + Q.length + ' · Score ' + score;
+    game.innerHTML = '<span class="eyebrow">Someone on the team says</span><p class="statement">' + esc(q.s) + '</p>' +
+      '<div class="choices"><button class="choice" type="button" data-a="problem">Problem</button><button class="choice" type="button" data-a="solution">Solution</button></div><div id="fb"></div>';
+    game.querySelectorAll('.choice').forEach(function (b) { b.onclick = function () { answer(b); }; });
+    game.querySelector('.choice').focus();
+  }
+  function answer(btn) {
+    var q = Q[i], ok = btn.getAttribute('data-a') === q.a;
+    if (ok) score++;
+    game.querySelectorAll('.choice').forEach(function (b) { b.disabled = true; });
+    btn.classList.add('picked');
+    count.textContent = 'Question ' + (i + 1) + ' of ' + Q.length + ' · Score ' + score;
+    var last = i === Q.length - 1;
+    document.getElementById('fb').innerHTML = '<div class="feedback ' + (ok ? 'right' : 'wrong') + '" role="status"><b>' + (ok ? 'Right, it is a ' : 'Not quite, it is a ') + q.a + '.</b><p>' + esc(q.why) + '</p></div>' +
+      '<div class="actions" style="margin-top:var(--space-4)"><button class="btn btn-primary" type="button" id="next">' + (last ? 'See my score' : 'Next question') + '</button></div>';
+    var n = document.getElementById('next'); n.focus();
+    n.onclick = function () { if (last) end(); else { i++; ask(); } };
+  }
+  function end() {
+    count.textContent = '';
+    var msg = score === Q.length ? 'Perfect. You already think like a PM.' : score >= 6 ? 'Great instinct. A little practice and it becomes a habit.' : 'Good start. This is the most useful habit in Product, and it takes practice.';
+    game.innerHTML = '<span class="eyebrow">Your score</span><div class="score">' + score + ' / ' + Q.length + '</div><p class="lead">' + msg + '</p>' +
+      '<div class="actions"><button class="btn btn-primary" type="button" id="again">Play again</button><a class="btn btn-ghost" href="../../days/day-1/">Learn with Day 1</a></div>';
+    document.getElementById('again').onclick = function () { i = 0; score = 0; ask(); };
+  }
+  intro();
+})();
+</script>
+</body>
+</html>

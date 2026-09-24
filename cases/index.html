@@ -1,0 +1,15 @@
+---
+layout: default
+title: Case studies
+summary: Real Product situations, walked through step by step.
+nav: cases
+---
+{% assign cases = site.cases | sort: "order" %}
+<div class="wrap">
+  <section class="page-head">
+    <span class="eyebrow">Case studies</span>
+    <h1>Real situations, step by step.</h1>
+    <p class="lead">Each case walks through what the team heard, what they asked, what they tried and what happened. Read them like a PM would.</p>
+  </section>
+  <div class="grid">{% for c in cases %}{% include case-card.html case=c %}{% endfor %}</div>
+</div>

@@ -1,0 +1,20 @@
+---
+layout: default
+---
+<div class="wrap"><article class="article">
+  <div class="crumbs"><a href="{{ '/cases/' | relative_url }}">Case studies</a>{% if page.tag %}<span>/</span><span>{{ page.tag }}</span>{% endif %}</div>
+  <div class="meta">{% if page.tag %}<span class="badge">{{ page.tag }}</span>{% endif %}<span>{{ page.minutes | default: 6 }} min read</span></div>
+  <h1>{{ page.title }}</h1>
+  {% if page.status == "coming-soon" %}
+  <p class="lead" style="max-width:none">{{ page.summary }}</p>
+  <div class="empty">
+    <div class="art">{% include art-empty.html %}</div>
+    <h3>This case study is being written</h3>
+    <p>Check back soon, or get it by email when it is ready.</p>
+    <a class="btn btn-secondary" href="{{ '/#newsletter' | relative_url }}">Get new case studies by email</a>
+  </div>
+  {% else %}
+  <div class="prose">{{ content }}</div>
+  {% endif %}
+  <nav class="pager"><a class="link" href="{{ '/cases/' | relative_url }}">← All case studies</a><a class="link" href="{{ '/tools/' | relative_url }}">Tools &amp; templates →</a></nav>
+</article></div>

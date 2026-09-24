@@ -1,0 +1,53 @@
+---
+layout: default
+title: Product Starter
+nav: home
+---
+{% assign ds = site.days | sort: "day" %}
+{% assign cases = site.cases | sort: "order" %}
+<div class="wrap">
+  <section class="hero">
+    <div class="stack">
+      <span class="eyebrow">100 Days of Product</span>
+      <h1>Learn Product <mark>one day</mark> at a time.</h1>
+      <p class="lead">Plain-English lessons, real situations and free templates for anyone starting a career in Product. Five minutes a day, no jargon.</p>
+      <div class="actions">
+        <a class="btn btn-primary" href="{{ ds.first.url | relative_url }}" data-continue>Start Day 1{% include icon.html name="arrow" %}</a>
+        <a class="btn btn-ghost" href="{{ '/cases/' | relative_url }}">See a case study</a>
+      </div>
+    </div>
+    <div class="hero-art">{% include art-hero.html %}</div>
+  </section>
+</div>
+
+<section class="section band"><div class="wrap">
+  <div class="section-head"><div class="stack"><span class="eyebrow">How it works</span><h2>Three steps into Product</h2></div></div>
+  <div class="grid-3">
+    <article class="card path-card">{% include icon.html name="book" class="ic-lg" %}<span class="step">Understand</span><h3 class="card-title">What Product really is</h3><p class="card-body">Start with the basics: what a Product Manager does, who they work with, and why it matters. Explained like you are new, because you are.</p><a class="link" href="{{ '/days/' | relative_url }}">Browse the Basics</a></article>
+    <article class="card path-card">{% include icon.html name="calendar" class="ic-lg" %}<span class="step">Practice</span><h3 class="card-title">One lesson a day</h3><p class="card-body">100 short lessons with one running example each. Mark a day done and watch your tracker fill up.</p><a class="link" href="{{ '/days/' | relative_url }}">See all 100 days</a></article>
+    <article class="card path-card">{% include icon.html name="path" class="ic-lg" %}<span class="step">Grow</span><h3 class="card-title">Your first Product role</h3><p class="card-body">Case studies, templates and career lessons to help you build a portfolio and walk into interviews ready.</p><a class="link" href="{{ '/tools/' | relative_url }}">Get the templates</a></article>
+  </div>
+</div></section>
+
+<section class="section"><div class="wrap"><div class="panel"><div class="today-row">
+  <div style="display:grid;gap:var(--space-4)" data-today-panel>
+    <span class="eyebrow">Your 100 days</span>
+    <h2>Today: <mark>Day {{ ds.first.day }}</mark></h2>
+    <p class="muted">{{ ds.first.title }} · {{ ds.first.minutes | default: 5 }} min</p>
+    <div class="actions"><a class="btn btn-primary" href="{{ ds.first.url | relative_url }}">Open today's lesson</a><a class="btn btn-ghost" href="{{ '/days/' | relative_url }}">All lessons</a></div>
+  </div>
+  <div data-tracker></div>
+</div></div></div></section>
+
+<section class="section band"><div class="wrap">
+  <div class="section-head"><div class="stack"><span class="eyebrow">Case studies</span><h2>Real situations, step by step</h2></div><a class="link" href="{{ '/cases/' | relative_url }}">All case studies</a></div>
+  <div class="grid">{% for c in cases limit: 3 %}{% include case-card.html case=c %}{% endfor %}</div>
+</div></section>
+
+<section class="section"><div class="wrap">
+  <div class="section-head"><div class="stack"><span class="eyebrow">Tools &amp; templates</span><h2>Start with a good page, not a blank one</h2></div><a class="link" href="{{ '/tools/' | relative_url }}">All templates</a></div>
+  {% assign ts = site.templates | sort: "order" %}
+  <div class="grid">{% for t in ts limit: 3 %}{% include template-card.html template=t %}{% endfor %}</div>
+</div></section>
+
+<div class="wrap">{% include newsletter.html %}</div>

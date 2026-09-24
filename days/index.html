@@ -1,0 +1,33 @@
+---
+layout: default
+title: 100 Days of Product
+summary: One small Product lesson a day, in five modules.
+nav: days
+---
+<div class="wrap">
+  <section class="page-head">
+    <span class="eyebrow">100 Days of Product</span>
+    <h1>One small lesson a day.</h1>
+    <p class="lead">Five modules, twenty days each. Every lesson takes about five minutes and uses one everyday example.</p>
+  </section>
+  <div class="panel"><div data-progress></div><div data-tracker></div></div>
+
+  <div style="margin-top:var(--space-12);display:grid;gap:var(--space-4)">
+    <div class="chips" role="group" aria-label="Filter by module">
+      <button class="chip" type="button" data-filter="All" aria-pressed="true">All</button>
+      {% for m in site.data.modules %}<button class="chip" type="button" data-filter="{{ m.name }}" aria-pressed="false">{{ m.name }}</button>{% endfor %}
+    </div>
+    {% for m in site.data.modules %}
+    {% assign ls = site.days | where: "topic", m.name | sort: "day" %}
+    <section class="module" data-module="{{ m.name }}" aria-labelledby="m-{{ m.name | slugify }}">
+      <div class="module-head"><h2 id="m-{{ m.name | slugify }}" style="font-size:28px">{{ m.name }}</h2><span class="range">Days {{ m.from }}–{{ m.to }}</span></div>
+      <p class="muted">{{ m.blurb }}</p>
+      {% if ls.size > 0 %}
+      <div class="grid">{% for l in ls %}{% include lesson-card.html lesson=l %}{% endfor %}</div>
+      {% else %}
+      <p class="note">Lessons for this module are coming soon.</p>
+      {% endif %}
+    </section>
+    {% endfor %}
+  </div>
+</div>
