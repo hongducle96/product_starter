@@ -14,12 +14,14 @@
   function todayDay() { for (var i = 0; i < lessons.length; i++) if (!isDone(lessons[i].day)) return lessons[i].day; return null; }
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
   function ic(name) { return '<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-' + name + '"/></svg>'; }
+  var calm = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var firstPaint = true, justDone = null;
   var CHECK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 12.5l4 4 8-9" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
   /* ---------- progress UI ---------- */
   function progressHTML() {
     var n = done.length;
-    return '<div class="progress"><div class="progress-label"><span>Your progress · 100 Days of Product</span><b>' + n + ' / 100</b></div>' +
+    return '<div class="progress' + (firstPaint ? ' grow' : '') + '"><div class="progress-label"><span>Your progress · 100 Days of Product</span><b>' + n + ' / 100</b></div>' +
       '<div class="track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + n + '" aria-label="Days completed"><div class="fill" style="width:' + n + '%"></div></div></div>';
   }
   function trackerHTML() {
@@ -27,10 +29,11 @@
     for (var i = 1; i <= 100; i++) {
       var l = byDay[i], st = isDone(i) ? 'done' : i === t ? 'today' : '';
       var label = 'Day ' + i + (l ? ': ' + l.title : ' (coming soon)') + (st ? ' · ' + st : '');
-      cells += l ? '<a class="dot ' + st + '" href="' + l.url + '" title="' + esc(label) + '" aria-label="' + esc(label) + '">' + (st === 'done' ? CHECK : '') + '</a>'
-                 : '<span class="dot locked" title="' + esc(label) + '"></span>';
+      var i9 = firstPaint ? ' style="--i:' + i + '"' : '';
+      cells += l ? '<a class="dot ' + st + '"' + i9 + ' href="' + l.url + '" title="' + esc(label) + '" aria-label="' + esc(label) + '">' + (st === 'done' ? CHECK : '') + '</a>'
+                 : '<span class="dot locked"' + i9 + ' title="' + esc(label) + '"></span>';
     }
-    return '<div class="tracker" role="group" aria-label="' + done.length + ' of 100 days done">' + cells + '</div>' +
+    return '<div class="tracker' + (firstPaint ? ' pop' : '') + '" role="group" aria-label="' + done.length + ' of 100 days done">' + cells + '</div>' +
       '<div class="legend"><span><i class="done"></i>Done</span><span><i class="today"></i>Today</span><span><i></i>Upcoming</span></div>';
   }
   function paintProgress() {
@@ -54,8 +57,29 @@
     document.querySelectorAll('[data-done-bar]').forEach(function (bar) {
       var d = parseInt(bar.getAttribute('data-day'), 10);
       bar.innerHTML = isDone(d)
-        ? '<span class="badge badge-done">' + ic('done') + 'Done</span><span class="muted" style="flex:1">Nice work. Day ' + d + ' is on your tracker.</span><button class="btn btn-ghost btn-sm" type="button" data-toggle-done="' + d + '">Mark as not done</button>'
+        ? '<span class="badge badge-done' + (justDone === d ? ' pop' : '') + '">' + ic('done') + 'Done</span><span class="muted" style="flex:1">Nice work. Day ' + d + ' is on your tracker.</span><button class="btn btn-ghost btn-sm" type="button" data-toggle-done="' + d + '">Mark as not done</button>'
         : '<span style="flex:1">Finished reading?</span><button class="btn btn-primary" type="button" data-toggle-done="' + d + '">' + ic('done') + 'Mark Day ' + d + ' as done</button>';
+    });
+    firstPaint = false; justDone = null;
+  }
+
+  /* ---------- scroll reveal ----------
+     Only blocks that start below the fold are hidden, and only once this
+     script runs, so the page is complete without JavaScript or motion. */
+  function reveal() {
+    if (calm || !('IntersectionObserver' in window)) return;
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        var el = e.target; io.unobserve(el); el.classList.add('in');
+        setTimeout(function () { el.classList.remove('reveal', 'in'); el.style.removeProperty('--d'); }, 1400);
+      });
+    }, { rootMargin: '0px 0px -8% 0px' });
+    document.querySelectorAll('main .section-head, main .grid > .card, main .grid-3 > .card, main .panel, main .newsletter, main .module-head, main .prose > *, main .done-bar, main .pager').forEach(function (el) {
+      if (el.getBoundingClientRect().top < window.innerHeight) return;
+      var sibs = el.parentElement.children, n = Array.prototype.indexOf.call(sibs, el);
+      if (el.classList.contains('card')) el.style.setProperty('--d', Math.min(n, 5) * 80 + 'ms');
+      el.classList.add('reveal'); io.observe(el);
     });
   }
 
@@ -63,6 +87,7 @@
     var tg = e.target.closest('[data-toggle-done]');
     if (tg) {
       var d = parseInt(tg.getAttribute('data-toggle-done'), 10);
+      if (!isDone(d)) justDone = d;
       done = isDone(d) ? done.filter(function (x) { return x !== d; }) : done.concat([d]);
       store.set('done', done); paintProgress();
       var again = document.querySelector('[data-toggle-done]'); if (again) again.focus();
@@ -126,8 +151,9 @@
   var root = document.documentElement, themeBtn = document.getElementById('themeBtn');
   function isDark() { var s = root.getAttribute('data-theme'); return s ? s === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches; }
   function paintThemeBtn() { var d = isDark(); themeBtn.innerHTML = ic(d ? 'sun' : 'moon'); themeBtn.setAttribute('aria-label', d ? 'Switch to light mode' : 'Switch to dark mode'); }
-  themeBtn.addEventListener('click', function () { var next = isDark() ? 'light' : 'dark'; root.setAttribute('data-theme', next); store.set('theme', next); paintThemeBtn(); });
+  themeBtn.addEventListener('click', function () { var next = isDark() ? 'light' : 'dark'; root.setAttribute('data-theme', next); store.set('theme', next); paintThemeBtn(); themeBtn.classList.remove('spin'); void themeBtn.offsetWidth; themeBtn.classList.add('spin'); });
   try { window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', paintThemeBtn); } catch (e) {}
   paintThemeBtn();
   paintProgress();
+  reveal();
 })();
